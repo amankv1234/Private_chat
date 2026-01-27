@@ -6,10 +6,9 @@ Users can create or join a private chat room using a unique Chat ID and communic
 ---
 
 ## 🚀 Live Demo
-🔗 https://your-render-link.onrender.com
-
+🔗 https://private-chat-0qf3.onrender.com/
 ## 💻 GitHub Repository
-🔗 https://github.com/yourusername/your-repo
+🔗 https://github.com/amankv1234/Private_chat
 
 ---
 
