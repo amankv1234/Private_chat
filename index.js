@@ -6,7 +6,7 @@ const path = require("path");
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server);
-
+const PORT = process.env.PORT || 9000;
 app.use(express.static(path.join(__dirname, "public")));
 
 const chats = {}; 
@@ -95,6 +95,6 @@ io.on("connection", (socket) => {
     });
 });
 
-server.listen(9000, () => {
-    console.log("✅ Server running on http://localhost:9000");
+server.listen(PORT, () => {
+  console.log("Server running on port " + PORT);
 });
