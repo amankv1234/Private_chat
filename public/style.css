@@ -1,0 +1,222 @@
+/* ---------------- RESET ---------------- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Segoe UI", system-ui, sans-serif;
+}
+
+/* ---------------- BODY ---------------- */
+body {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #020617, #0f172a);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 15px;
+}
+
+/* ---------------- LOGIN & CHAT WRAPPER ---------------- */
+.login-container,
+.chat-container {
+    width: 100%;
+    max-width: 420px;
+    background: rgba(2, 6, 23, 0.95);
+    border-radius: 18px;
+    padding: 22px;
+    color: #f8fafc;
+    box-shadow: 0 25px 60px rgba(0,0,0,0.6);
+    backdrop-filter: blur(10px);
+}
+
+/* ---------------- LOGIN ---------------- */
+.login-container h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 1.4rem;
+    letter-spacing: 0.5px;
+}
+
+.login-container input {
+    width: 100%;
+    padding: 13px 14px;
+    margin-bottom: 12px;
+    background: #020617;
+    border: 1px solid #1e293b;
+    border-radius: 12px;
+    color: white;
+    font-size: 0.95rem;
+    transition: border 0.2s, box-shadow 0.2s;
+}
+
+.login-container input:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 2px rgba(37,99,235,0.25);
+}
+
+.login-container button {
+    width: 100%;
+    padding: 13px;
+    margin-top: 8px;
+    border-radius: 14px;
+    border: none;
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    color: white;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.login-container button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 10px 25px rgba(37,99,235,0.4);
+}
+
+/* ---------------- CHAT ---------------- */
+.chat-container {
+    display: flex;
+    flex-direction: column;
+    height: 85vh;
+    max-height: 650px;
+}
+
+.chat-container header {
+    text-align: center;
+    padding: 14px;
+    font-weight: 600;
+    font-size: 1.05rem;
+    border-bottom: 1px solid #1e293b;
+    margin-bottom: 8px;
+}
+
+/* ---------------- MESSAGES ---------------- */
+#messages {
+    flex: 1;
+    padding: 10px 6px;
+    overflow-y: auto;
+    scroll-behavior: smooth;
+}
+
+/* custom scrollbar */
+#messages::-webkit-scrollbar {
+    width: 6px;
+}
+#messages::-webkit-scrollbar-thumb {
+    background: #1e293b;
+    border-radius: 10px;
+}
+
+/* message bubbles */
+.message {
+    max-width: 78%;
+    padding: 10px 14px;
+    margin-bottom: 10px;
+    border-radius: 16px;
+    font-size: 0.9rem;
+    line-height: 1.4;
+    word-wrap: break-word;
+    animation: fadeIn 0.2s ease;
+}
+
+.self {
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    margin-left: auto;
+    border-bottom-right-radius: 6px;
+}
+
+.other {
+    background: #1e293b;
+    margin-right: auto;
+    border-bottom-left-radius: 6px;
+}
+
+.info {
+    text-align: center;
+    font-size: 0.75rem;
+    color: #94a3b8;
+    margin: 8px 0;
+}
+
+/* ---------------- INPUT BOX ---------------- */
+.input-box {
+    display: flex;
+    gap: 10px;
+    padding-top: 10px;
+    border-top: 1px solid #1e293b;
+}
+
+.input-box input {
+    flex: 1;
+    padding: 12px 14px;
+    background: #020617;
+    border: 1px solid #1e293b;
+    border-radius: 18px;
+    color: white;
+    font-size: 0.9rem;
+}
+
+.input-box input:focus {
+    outline: none;
+    border-color: #2563eb;
+}
+
+.input-box button {
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    border: none;
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    color: white;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.input-box button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 20px rgba(37,99,235,0.45);
+}
+
+/* ---------------- UTIL ---------------- */
+.hidden {
+    display: none;
+}
+
+/* ---------------- ANIMATIONS ---------------- */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(4px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ---------------- RESPONSIVE ---------------- */
+@media (max-width: 480px) {
+    .chat-container {
+        height: 92vh;
+        border-radius: 16px;
+    }
+
+    .login-container {
+        border-radius: 16px;
+    }
+}
+.typing {
+    font-size: 13px;
+    color: #94a3b8;
+    margin-bottom: 6px;
+    font-style: italic;
+    animation: blink 1.2s infinite;
+}
+
+@keyframes blink {
+    0% { opacity: 0.4; }
+    50% { opacity: 1; }
+    100% { opacity: 0.4; }
+}
