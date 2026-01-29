@@ -68,16 +68,42 @@ io.on("connection", (socket) => {
         io.to(chatID).emit("info", `${name} joined the chat`);
     });
 
-    // 🔹 MESSAGE
-    socket.on("user-message", (msg) => {
-        if (!socket.chatID || !chats[socket.chatID]) return;
+    // 🔹 MESSAGE (E2EE SAFE)
+socket.on("user-message", (encryptedMsg) => {
+    if (!socket.chatID || !chats[socket.chatID]) return;
 
-        io.to(socket.chatID).emit("message", {
-            user: socket.username,
-            text: msg,
-            time: new Date().toLocaleTimeString()
-        });
+    io.to(socket.chatID).emit("message", {
+        user: socket.username,
+        encrypted: encryptedMsg,
+        time: new Date().toLocaleTimeString()
     });
+});
+
+// 🔹 TYPING
+socket.on("typing", ({ chatID, name }) => {
+    socket.to(chatID).emit("showTyping", name);
+});
+
+socket.on("stopTyping", ({ chatID }) => {
+    socket.to(chatID).emit("hideTyping");
+});
+socket.on("user-away", (name) => {
+  socket.to(socket.chatID).emit("info", `${name} switched tab 👀`);
+});
+
+socket.on("user-back", (name) => {
+  socket.to(socket.chatID).emit("info", `${name} is back ✅`);
+});
+socket.on("message", async (data) => {
+   const div = document.createElement("div");
+   div.innerText = decryptedText;
+   messages.appendChild(div);
+
+   setTimeout(() => {
+     div.remove();
+   }, 30000);
+});
+
 
     // 🔹 DISCONNECT
     socket.on("disconnect", () => {
@@ -94,6 +120,7 @@ io.on("connection", (socket) => {
         }
     });
 });
+
 
 server.listen(PORT, () => {
   console.log("Server running on port " + PORT);

@@ -18,15 +18,36 @@
 </div>
 
 <div class="chat-container hidden" id="chat">
-    <header>Private Chat</header>
+   <header>
+  Private Chat  
+  <button id="copyBtn">📋</button>
+  <p id="timer"></p>
+</header>
 
     <div id="messages"></div>
 
-    <div class="input-box">
-        <input id="message" placeholder="Type message..." />
-        <button id="sendBtn">➤</button>
-    </div>
+<div class="input-box">
+    <button id="emojiBtn">😊</button>
+
+    <input id="message" placeholder="Type message..." />
+
+    <button id="sendBtn">➤</button>
 </div>
+
+<!-- Emoji Picker Library -->
+<emoji-picker id="emojiPicker" class="hidden"></emoji-picker>
+
+<script type="module"
+  src="https://cdn.jsdelivr.net/npm/emoji-picker-element@^1/index.js">
+</script>
+
+</div>
+<!-- Emoji Picker Library -->
+<emoji-picker id="emojiPicker" class="hidden"></emoji-picker>
+
+<script type="module"
+  src="https://cdn.jsdelivr.net/npm/emoji-picker-element@^1/index.js">
+</script>
 
 <script src="/socket.io/socket.io.js"></script>
 <script src="script.js"></script>
