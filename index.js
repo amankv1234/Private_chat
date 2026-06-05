@@ -52,11 +52,6 @@ io.on("connection", (socket) => {
             return;
         }
 
-        if (chat.users.length >= 2) {
-            socket.emit("invalid-chat");
-            return;
-        }
-
         // ✅ join success
         chat.users.push(socket.id);
 
@@ -68,15 +63,22 @@ io.on("connection", (socket) => {
         io.to(chatID).emit("info", `${name} joined the chat`);
     });
 
-    // 🔹 MESSAGE (E2EE SAFE)
-socket.on("user-message", (encryptedMsg) => {
+// 🔹 MESSAGE (E2EE SAFE)
+socket.on("user-message", (payload) => {
     if (!socket.chatID || !chats[socket.chatID]) return;
 
     io.to(socket.chatID).emit("message", {
+        id: payload.id, // Generate on client
         user: socket.username,
-        encrypted: encryptedMsg,
-        time: new Date().toLocaleTimeString()
+        encrypted: payload.encryptedMsg,
+        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
     });
+});
+
+// 🔹 READ RECEIPT
+socket.on("message-read", (msgId) => {
+    if (!socket.chatID) return;
+    socket.to(socket.chatID).emit("message-read-update", { msgId, reader: socket.username });
 });
 
 // 🔹 TYPING
@@ -94,29 +96,30 @@ socket.on("user-away", (name) => {
 socket.on("user-back", (name) => {
   socket.to(socket.chatID).emit("info", `${name} is back ✅`);
 });
-socket.on("message", async (data) => {
-   const div = document.createElement("div");
-   div.innerText = decryptedText;
-   messages.appendChild(div);
-
-   setTimeout(() => {
-     div.remove();
-   }, 30000);
-});
 
 
-    // 🔹 DISCONNECT
+
+// 🔹 LEAVE CHAT (intentional leave button)
+    socket.on("leave-chat", ({ chatID: id, name }) => {
+        if (!id || !chats[id]) return;
+        chats[id].users = chats[id].users.filter(uid => uid !== socket.id);
+        socket.leave(id);
+        socket.chatID   = null;
+        socket.username = null;
+        io.to(id).emit("info", `${name} left the room`);
+        if (chats[id].users.length === 0) delete chats[id];
+    });
+
+    // 🔹 DISCONNECT (browser close / network drop)
     socket.on("disconnect", () => {
-        const chatID = socket.chatID;
-        if (!chatID || !chats[chatID]) return;
+        const id = socket.chatID;
+        if (!id || !chats[id]) return;
 
-        chats[chatID].users =
-            chats[chatID].users.filter(id => id !== socket.id);
+        chats[id].users = chats[id].users.filter(uid => uid !== socket.id);
+        io.to(id).emit("info", `${socket.username} disconnected`);
 
-        io.to(chatID).emit("info", `${socket.username} left`);
-
-        if (chats[chatID].users.length === 0) {
-            delete chats[chatID];
+        if (chats[id].users.length === 0) {
+            delete chats[id];
         }
     });
 });

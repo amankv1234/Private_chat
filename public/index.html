@@ -1,55 +1,104 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Private Chat</title>
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="A secure, private real-time chat with end-to-end encryption and auto-destructing messages." />
+  <title>PrivateChat — Encrypted & Ephemeral</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
-<div class="login-container" id="login">
-    <h2>🔒 Private Chat</h2>
+  <!-- =================== LOGIN SCREEN =================== -->
+  <div class="screen" id="loginScreen">
+    <div class="login-card">
+      <div class="login-logo">
+        <span class="logo-icon">🔒</span>
+        <h1 class="logo-title">PrivateChat</h1>
+        <p class="logo-sub">End-to-end encrypted · No logs · Ephemeral</p>
+      </div>
 
-    <input id="name" placeholder="Your name" />
-    <input id="chatIdInput" placeholder="Chat ID (leave empty to create)" />
+      <div class="login-form">
+        <div class="input-group">
+          <label for="nameInput">Your Name</label>
+          <input id="nameInput" type="text" placeholder="Enter your display name" autocomplete="off" maxlength="30" />
+        </div>
 
-    <button id="startBtn">Start Chat</button>
-</div>
+        <div class="input-group" id="joinIdGroup" style="display:none;">
+          <label for="chatIdInput">Chat Room ID</label>
+          <div class="input-with-btn">
+            <input id="chatIdInput" type="text" placeholder="Paste the room ID here" autocomplete="off" maxlength="10" />
+          </div>
+        </div>
 
-<div class="chat-container hidden" id="chat">
-   <header>
-  Private Chat  
-  <button id="copyBtn">📋</button>
-  <p id="timer"></p>
-</header>
+        <div class="login-actions">
+          <button id="createBtn" class="btn-primary" aria-label="Create a new private room">
+            <span>✨</span> Create Room
+          </button>
+          <div class="divider">or</div>
+          <button id="joinToggleBtn" class="btn-secondary" aria-label="Join an existing room">
+            <span>🔑</span> Join Room
+          </button>
+          <button id="joinBtn" class="btn-primary hidden" aria-label="Connect to the chat room">
+            <span>→</span> Connect
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
 
-    <div id="messages"></div>
+  <!-- =================== CHAT SCREEN =================== -->
+  <div class="screen hidden" id="chatScreen">
+    <div class="chat-wrapper">
 
-<div class="input-box">
-    <button id="emojiBtn">😊</button>
+      <!-- Header -->
+      <header class="chat-header">
+        <div class="header-left">
+          <span class="header-lock">🔒</span>
+          <div>
+            <p class="header-title">Private Room</p>
+            <p class="header-id" id="headerRoomId"></p>
+          </div>
+        </div>
+        <div class="header-center">
+          <span id="roomStatus" class="room-status waiting">⏳ Waiting for someone...</span>
+          <span id="sessionTimer" class="session-timer"></span>
+        </div>
+        <div class="header-right">
+          <button id="copyBtn" class="icon-btn" title="Copy Room ID" aria-label="Copy Room ID">📋</button>
+          <button id="themeBtn" class="icon-btn" title="Toggle Theme" aria-label="Toggle light/dark mode">🌙</button>
+          <button id="leaveBtn" class="icon-btn danger" title="Leave Room" aria-label="Leave room">✕</button>
+        </div>
+      </header>
 
-    <input id="message" placeholder="Type message..." />
+      <!-- Messages Area -->
+      <div id="messages" role="log" aria-live="polite" aria-label="Chat messages"></div>
 
-    <button id="sendBtn">➤</button>
-</div>
+      <!-- Input Area -->
+      <div class="input-area">
+        <button id="emojiBtn" class="icon-btn emoji-trigger" aria-label="Open emoji picker">😊</button>
+        <label for="fileInput" class="icon-btn attach-btn" title="Attach image (max 2MB)" aria-label="Attach image">📎</label>
+        <input id="fileInput" type="file" accept="image/*" class="hidden" aria-hidden="true" />
+        <input id="msgInput" type="text" placeholder="Type an encrypted message…" autocomplete="off" aria-label="Message input" />
+        <button id="sendBtn" class="send-btn" aria-label="Send message">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="22" y1="2" x2="11" y2="13"></line>
+            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+          </svg>
+        </button>
+      </div>
 
-<!-- Emoji Picker Library -->
-<emoji-picker id="emojiPicker" class="hidden"></emoji-picker>
+      <!-- Emoji Picker (placed outside input-area to position correctly) -->
+      <emoji-picker id="emojiPicker" class="hidden"></emoji-picker>
+    </div>
+  </div>
 
-<script type="module"
-  src="https://cdn.jsdelivr.net/npm/emoji-picker-element@^1/index.js">
-</script>
-
-</div>
-<!-- Emoji Picker Library -->
-<emoji-picker id="emojiPicker" class="hidden"></emoji-picker>
-
-<script type="module"
-  src="https://cdn.jsdelivr.net/npm/emoji-picker-element@^1/index.js">
-</script>
-
-<script src="/socket.io/socket.io.js"></script>
-<script src="script.js"></script>
+  <!-- Emoji picker web component -->
+  <script type="module" src="https://cdn.jsdelivr.net/npm/emoji-picker-element@^1/index.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
